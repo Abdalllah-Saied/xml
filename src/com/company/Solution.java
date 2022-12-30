@@ -19,6 +19,8 @@ import org.xml.sax.SAXException;
 public class Solution {
     File file= new File("D:\\ELgam3a\\FCAI 7\\soa\\xmlfile.xml");
     Scanner input= new Scanner(System.in);
+    Validation validation=new Validation();
+    int n=0;
     public void create(){
         try{
             if (file.exists()){
@@ -33,31 +35,60 @@ public class Solution {
                 Catalogue.appendChild(Book);
                 Attr attr = document.createAttribute("id");
                 System.out.println("enter book id");
-                String id=input.nextLine();
+                String id=validation.validateId();
                 attr.setValue(id);
                 Book.setAttributeNode(attr);
                 //element 1
                 Element Author = document.createElement("Author");
                 System.out.println("enter auther");
-                String auther=input.nextLine();
+                String auther= validation.validateAuther();
                 Author.appendChild(document.createTextNode(auther));
                 Book.appendChild(Author);
                 //element 2
                 Element Title = document.createElement("Title");
                 System.out.println("enter title");
-                String title=input.nextLine();
+                String title=validation.validateIsNull();
                 Title.appendChild(document.createTextNode(title));
                 Book.appendChild(Title);
                 //element 3
                 Element Genre = document.createElement("Genre");
-                System.out.println("enter genre");
-                String genre=input.nextLine();
+                System.out.println("choose genre:");
+                System.out.println("1-Science");
+                System.out.println("2-Fiction");
+                System.out.println("3-Drama");
+                String choice=input.nextLine();
+                String genre;
+                while (true){
+                    if (choice.equals("1")) {
+                        genre = "Science";
+                        break;
+                    }
+                    else if (choice.equals("2")) {
+                        genre = "Fiction";
+                        break;
+                    }
+                    else if (choice.equals("3")) {
+                        genre = "Drama";
+                        break;
+                    }else{
+                        System.out.println("wrong input try again");
+                    }
+                }
                 Genre.appendChild(document.createTextNode(genre));
                 Book.appendChild(Genre);
                 //element 4
                 Element Price = document.createElement("Price");
                 System.out.println("enter price");
-                String price=input.nextLine();
+                String price;
+                while(true){
+                    try {
+                        price=input.nextLine();
+                        Double.parseDouble(price);
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("enter numerical value");
+                    }
+                }
                 Price.appendChild(document.createTextNode(price));
                 Book.appendChild(Price);
                 //element 5
@@ -69,7 +100,7 @@ public class Solution {
                 //element 6
                 Element Description = document.createElement("Description");
                 System.out.println("enter description");
-                String description=input.nextLine();
+                String description=validation.validateIsNull();
                 Description.appendChild(document.createTextNode(description));
                 Book.appendChild(Description);
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -90,43 +121,80 @@ public class Solution {
                 Catalogue.appendChild(Book);
                 Attr attr = document.createAttribute("id");
                 System.out.println("enter book id");
-                String id=input.nextLine();
+                String id;
+                if (n==0){
+                     id=validation.validateIsNull();
+                     n++;
+                }else{
+                    id= validation.validateId();
+                }
                 attr.setValue(id);
                 Book.setAttributeNode(attr);
                 //element 1
                 Element Author = document.createElement("Author");
                 System.out.println("enter auther");
-                String auther=input.nextLine();
+                String auther= validation.validateAuther();
                 Author.appendChild(document.createTextNode(auther));
                 Book.appendChild(Author);
                 //element 2
                 Element Title = document.createElement("Title");
                 System.out.println("enter title");
-                String title=input.nextLine();
+                String title=validation.validateIsNull();
                 Title.appendChild(document.createTextNode(title));
                 Book.appendChild(Title);
                 //element 3
                 Element Genre = document.createElement("Genre");
                 System.out.println("enter genre");
-                String genre=input.nextLine();
+                System.out.println("choose genre:");
+                System.out.println("1-Science");
+                System.out.println("2-Fiction");
+                System.out.println("3-Drama");
+                String choice=input.nextLine();
+                String genre;
+                while (true){
+                    if (choice.equals("1")) {
+                        genre = "Science";
+                        break;
+                    }
+                    else if (choice.equals("2")) {
+                        genre = "Fiction";
+                        break;
+                    }
+                    else if (choice.equals("3")) {
+                        genre = "Drama";
+                        break;
+                    }else{
+                        System.out.println("wrong input try again");
+                    }
+                }
                 Genre.appendChild(document.createTextNode(genre));
                 Book.appendChild(Genre);
                 //element 4
                 Element Price = document.createElement("Price");
                 System.out.println("enter price");
-                String price=input.nextLine();
+                String price;
+                double p=0.0;
+                while(true){
+                    try {
+                        price=validation.validateIsNull();
+                        Double.parseDouble(price);
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("enter numerical value");
+                    }
+                }
                 Price.appendChild(document.createTextNode(price));
                 Book.appendChild(Price);
                 //element 5
                 Element Publish_Date = document.createElement("Publish_Date");
                 System.out.println("enter publish date");
-                String publish_date=input.nextLine();
+                String publish_date=validation.validateIsNull();
                 Publish_Date.appendChild(document.createTextNode(publish_date));
                 Book.appendChild(Publish_Date);
                 //element 6
                 Element Description = document.createElement("Description");
                 System.out.println("enter description");
-                String description=input.nextLine();
+                String description=validation.validateIsNull();
                 Description.appendChild(document.createTextNode(description));
                 Book.appendChild(Description);
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -142,7 +210,7 @@ public class Solution {
             pce.printStackTrace();
         }
     }
-    public void search(String key){
+    public void update(String id,String key ,String data){
         DocumentBuilderFactory documentFactory=DocumentBuilderFactory.newDefaultNSInstance();
         try {
             DocumentBuilder documentBuilder=documentFactory.newDocumentBuilder();
@@ -151,31 +219,36 @@ public class Solution {
             NodeList book=document.getElementsByTagName("Book");
             for (int i =0; i< book.getLength();i++){
                 Node node = book.item(i);
+
                 if (node.getNodeType() == Node.ELEMENT_NODE)
                 {
                     Element eElement = (Element) node;
-                    String author=eElement.getElementsByTagName("Author").item(0).getTextContent();
-                    String Title=eElement.getElementsByTagName("Title").item(0).getTextContent();
-                    if (author.equals(key) || Title.equals(key)){
-                        System.out.println("id: "+ eElement.getAttributes().item(0).getTextContent());
-                        System.out.println("Author: "+ eElement.getElementsByTagName("Author").item(0).getTextContent());
-                        System.out.println("Title: "+ eElement.getElementsByTagName("Title").item(0).getTextContent());
-                        System.out.println("Genre: "+ eElement.getElementsByTagName("Genre").item(0).getTextContent());
-                        System.out.println("Price: "+ eElement.getElementsByTagName("Price").item(0).getTextContent());
-                        System.out.println("Description: "+ eElement.getElementsByTagName("Description").item(0).getTextContent());
-                        System.out.println();
+                    String Id=eElement.getAttributes().item(0).getTextContent();
+                    if (Id.equals(id)){
+                        NodeList childNodes=node.getChildNodes();
+                        for (int j = 0; j < childNodes.getLength(); j++) {
+                            Node item = childNodes.item(j);
+                            if (item.getNodeType() == Node.ELEMENT_NODE){
+                                if (key.equalsIgnoreCase(item.getNodeName())) {
+                                    // update xml element role text
+                                    item.setTextContent(data);
+                                }
+                            }
+                        }
                     }
-
                 }
             }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource domSource = new DOMSource(document);
+            StreamResult streamResult = new StreamResult(new File(String.valueOf(file)));
+            transformer.transform(domSource, streamResult);
+            System.out.println("file updated");
+        } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
             e.printStackTrace();
         }
     }
+
     public void delete(String key){
         DocumentBuilderFactory documentFactory=DocumentBuilderFactory.newDefaultNSInstance();
         try {
@@ -195,13 +268,8 @@ public class Solution {
             DOMSource domSource = new DOMSource(document);
             StreamResult streamResult = new StreamResult(new File(String.valueOf(file)));
             transformer.transform(domSource, streamResult);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException | TransformerException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | IOException | TransformerException | SAXException e) {
             e.printStackTrace();
         }
     }
-
 }
