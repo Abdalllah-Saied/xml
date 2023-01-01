@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Search {
@@ -249,5 +250,35 @@ public class Search {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
+    }
+    public ArrayList<Book> getAllBooks(){
+        ArrayList Books =new ArrayList<Book>();
+        DocumentBuilderFactory documentFactory=DocumentBuilderFactory.newDefaultNSInstance();
+        try {
+            DocumentBuilder documentBuilder=documentFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(file);
+            document.getDocumentElement().normalize();
+            NodeList book=document.getElementsByTagName("Book");
+            for (int i =0; i< book.getLength();i++){
+                Book book1=new Book();
+                Node node = book.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                {
+                    Element eElement = (Element) node;
+                    book1.setId(eElement.getAttributes().item(0).getTextContent());
+                    book1.setAuthor(eElement.getElementsByTagName("Author").item(0).getTextContent());
+                    book1.setTitle(eElement.getElementsByTagName("Title").item(0).getTextContent());
+                    book1.setGenre(eElement.getElementsByTagName("Genre").item(0).getTextContent());
+                    book1.setPrice(eElement.getElementsByTagName("Price").item(0).getTextContent());
+                    book1.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+                    book1.setPublish_Date(eElement.getElementsByTagName("Publish_Date").item(0).getTextContent());
+
+                }
+                Books.add(book1);
+            }
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
+        return Books;
     }
 }

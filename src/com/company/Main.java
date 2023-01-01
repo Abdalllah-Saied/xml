@@ -1,5 +1,10 @@
 package com.company;
 
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +15,8 @@ public class Main {
         System.out.println("2-delete book");
         System.out.println("3-search book");
         System.out.println("4-update book");
-        System.out.println("5-exit");
+        System.out.println("5-sort books");
+        System.out.println("6-exit");
     }
     public static void searchMenu(){
         System.out.println("1-search by Id");
@@ -29,7 +35,7 @@ public class Main {
         System.out.println("5-Update Publish Date");
         System.out.println("6-Update Description");
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
         Solution solution = new Solution();
         Search search=new Search();
         Scanner input=new Scanner(System.in);
@@ -98,35 +104,58 @@ public class Main {
                     updateMenu();
                     String updateChoice = input.nextLine();
                     String data;
+                    Validation validate=new Validation();
                     switch (updateChoice) {
                         case "1" -> {
                             System.out.println("enter Author that you want to update");
-                            data = input.nextLine();
+                            data = validate.validateAuther();
                             solution.update(id, "Author", data);
                         }
                         case "2" -> {
                             System.out.println("enter Title that you want to update");
-                            data = input.nextLine();
+                            data = validate.validateIsNull();
                             solution.update(id, "Title", data);
                         }
                         case "3" -> {
                             System.out.println("enter Genre that you want to update");
-                            data = input.nextLine();
+                            data = validate.validateIsNull();
                             solution.update(id, "Genre", data);
                         }
                         case "4" -> {
-                            System.out.println("enter Price that you want to update");
+
+                            System.out.println("choose genre:");
+                            System.out.println("1-Science");
+                            System.out.println("2-Fiction");
+                            System.out.println("3-Drama");
+                            String gennum=input.nextLine();
+                            String genre;
+                            while (true){
+                                if (gennum.equals("1")) {
+                                    genre = "Science";
+                                    break;
+                                }
+                                else if (gennum.equals("2")) {
+                                    genre = "Fiction";
+                                    break;
+                                }
+                                else if (gennum.equals("3")) {
+                                    genre = "Drama";
+                                    break;
+                                }else{
+                                    System.out.println("wrong input try again");
+                                }
+                            }
                             data = input.nextLine();
                             solution.update(id, "Price", data);
                         }
                         case "5" -> {
                             System.out.println("enter Publish Date that you want to update");
-                            data = input.nextLine();
+                            data = validate.validateIsNull();
                             solution.update(id, "Publish_Date", data);
                         }
                         case "6" -> {
                             System.out.println("enter Description that you want to update");
-                            data = input.nextLine();
+                            data = validate.validateIsNull();
                             solution.update(id, "Description", data);
                         }
                     }
@@ -134,6 +163,18 @@ public class Main {
 
                     break;
                 case "5":
+                    ArrayList<Book> Books= solution.sortِAscendingly();
+                    for (int i=0;i<Books.size();i++){
+                        System.out.println(Books.get(i).getId());
+                        System.out.println(Books.get(i).getAuthor());
+                        System.out.println(Books.get(i).getTitle());
+                        System.out.println(Books.get(i).getPrice());
+                        System.out.println(Books.get(i).getDescription());
+                        System.out.println(Books.get(i).getPublish_Date());
+                        System.out.println("");
+                    }
+                    break;
+                case "6":
                     break label;
                 default:
                     System.out.println("wrong input");

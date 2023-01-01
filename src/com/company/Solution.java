@@ -1,12 +1,14 @@
 package com.company;
+import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -20,6 +22,8 @@ public class Solution {
     File file= new File("D:\\ELgam3a\\FCAI 7\\soa\\xmlfile.xml");
     Scanner input= new Scanner(System.in);
     Validation validation=new Validation();
+    Search search=new Search();
+    Book book1=new Book();
     int n=0;
     public void create(){
         try{
@@ -247,6 +251,26 @@ public class Solution {
         } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<com.company.Book> sortِAscendingly() throws SAXException, IOException, ParserConfigurationException{
+        ArrayList<com.company.Book> Books=search.getAllBooks();
+        String[] titleArray = new String[Books.size()];
+        ArrayList<String> Ids = new ArrayList<>();
+        for(int i = 0 ; i < Books.size(); i++){
+            titleArray[i] = Books.get(i).getTitle();
+        }
+        Arrays.sort(titleArray);
+        ArrayList<com.company.Book> sortedBooks = new ArrayList<>();
+        for (String title : titleArray) {
+            for (int j = 0; j < Books.size(); j++) {
+                if (Books.get(j).getAuthor().equals(title) && !Ids.contains(Books.get(j).getId())) {
+                    sortedBooks.add(Books.get(j));
+                    Ids.add(Books.get(j).getId());
+                }
+            }
+        }
+        return sortedBooks;
     }
 
     public void delete(String key){

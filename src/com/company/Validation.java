@@ -20,7 +20,7 @@ public class Validation {
         String key=input.nextLine();
         while (true){
             if (key.isEmpty()){
-                System.out.println("empty is empty you have to enter value.");
+                System.out.println("value is empty you have to enter value.");
                 key=input.nextLine();
             }else{
                 return key;
@@ -53,7 +53,7 @@ public class Validation {
 
             if (book.getNodeType() == Node.ELEMENT_NODE) {
                 //System.out.println("\nCurrent Element :" + nNode.getNodeName());
-                System.out.println(book.getAttributes().getNamedItem("id").getTextContent());
+                //System.out.println(book.getAttributes().getNamedItem("id").getTextContent());
                 String id = book.getAttributes().getNamedItem("id").getTextContent();
                 if (Key.equals(id)) {
                     check=true;
